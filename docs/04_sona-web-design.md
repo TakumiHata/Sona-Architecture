@@ -140,18 +140,99 @@ sequenceDiagram
     VV-->>SC: gRPC Response (Transcript + Identified Speaker Name)
 ```
 
-## 5. 推奨ディレクトリ構成 (Next.js)
+## 5. 開発環境・ディレクトリ構成
+
+### 5.1 ディレクトリの役割定義
 
 ```text
 /sona-web
 ├── src/
-│   ├── app/           # App Router
-│   ├── components/    # 再利用可能コンポーネント
-│   ├── hooks/         # カスタムフック (Supabase, Audio)
-│   ├── lib/           # Supabase client, utils
-│   ├── services/      # Voice-Verifier API client
-│   └── types/         # TypeScript definitions
-├── protos/shared/     # git submodule (Sona-Protobuf)
-├── supabase/          # Migrations, config
+│   ├── app/           # App Router (Pages, Layouts)
+│   ├── components/    # 再利用可能なUIコンポーネント
+│   ├── hooks/         # カスタムフック
+│   │   ├── useSupabase.ts # DB操作, 認証, Realtimeサブリプションの管理
+│   │   └── useAudio.ts    # ブラウザマイク操作, 録音Blob生成, レベルメーター
+│   ├── lib/           # 外部ライブラリ設定 (supabase-client 等)
+│   ├── services/      # Voice-Verifier API 等の外部通信ロジック
+│   └── types/         # TypeScript 型定義 (Protobufからの生成物含む)
+├── protos/shared/     # [Submodule] Sona-Protobuf (共通通信定義)
+├── supabase/
+│   ├── migrations/    # SQLマイグレーションファイル (DBスキーマのバージョン管理)
+│   └── seed.sql       # 開発用初期データ
+├── Dockerfile         # Sona-Web 本体の Docker イメージ定義
+├── docker-compose.yml # 開発スタック全体のオーケストレーション
 └── tailwind.config.js
+```
+
+#### ディレクトリの責務詳細
+- **hooks/useAudio.ts**:
+    - ブラウザの `MediaRecorder` API を抽象化。
+    - 話者登録時の 5~10 秒の録音制御、WAV形式への変換、音量可視化データの提供を担当。
+- **hooks/useSupabase.ts**:
+    - 会議ログのリアルタイム更新（Supabase Realtime）や、セッション状態の監視を担当。
+- **protos/shared/**:
+    - `Sona-Protobuf` リポジトリを Git Submodule として配置。
+    - SonaCore (Rust) や Voice-Verifier (Python) と**全く同じ `.proto` ファイル**を参照することで、型定義の不一致を防ぐ。
+
+### 5.2 データベース管理 (Migration)
+DB変更は全てマイグレーションファイルで管理します。
+
+1. **変更の作成**: `supabase/migrations/<timestamp>_init.sql` のように、SQLファイルを追加。
+2. **ローカル適用**: `supabase migration up` (Supabase CLI) にて適用。
+3. **コード反映**: 変更後は `supabase gen types typescript` にて、TypeScript 型定義を自動更新。
+
+### 5.3 Docker 開発環境
+Docker を使用することで、Next.js と周辺環境を統一します。
+
+- **sona-web コンテナ**: Next.js デバッグサーバーが動作。
+- **supabase-local (オプション)**: 必要に応じてローカルで Supabase スタックを起動し、インターネット接続なしでも開発可能な構成。
+
+## 6. インターフェース定義の自動化
+
+Sona-Suite では、複数の言語（TypeScript, Python, Rust）とプロトコル（gRPC, REST, PostgreSQL）が混在するため、**手動での型定義禁止**を原則とし、以下のツールチェーンでインターフェースを自動生成します。
+
+### 6.1 全体像 (Source of Truth)
+
+| 通信種別 | Source of Truth | 生成先 (Next.js) | 使用ツール |
+| :--- | :--- | :--- | :--- |
+| **Streaming (gRPC)** | `audio_service.proto` | `src/types/pb/*` | `Connect-ES` |
+| **Management (REST)** | `Voice-Verifier` (FastAPI) | `src/services/api/*` | `Orval` (OpenAPI) |
+| **Database** | Supabase Schema | `src/types/database.ts` | `Supabase CLI` |
+
+### 6.2 各ツールの役割と選定理由
+
+#### ① Connect-ES (gRPC用)
+- **選定理由**: ブラウザから gRPC を直接扱うためのモダンなツールチェーン。Envoy などのプロキシなしで HTTP/1.1 上で動作する `Connect` プロトコルをサポートしており、Next.js との相性が非常に良い。
+- **ワークフロー**:
+    1. `Sona-Protobuf` 内の `.proto` を編集。
+    2. `buf generate` を実行。
+    3. `src/types/pb` に型安全なクライアントが生成される。
+
+#### ② Orval (REST用)
+- **選定理由**: FastAPI が自動生成する `openapi.json` を入力とし、TypeScript クライアントだけでなく、**TanStack Query (React Query) のカスタムフックまで自動生成**する。ダッシュボード開発の DX が大幅に向上する。
+- **ワークフロー**:
+    1. `Voice-Verifier` (FastAPI) でエンドポイントを定義。
+    2. `http://localhost:8000/openapi.json` からスペックを取得。
+    3. `orval` を実行。
+    4. `useRegisterSpeakerMutation()` 等のフックが即座に利用可能になる。
+
+#### ③ Supabase CLI (DB用)
+- **ワークフロー**:
+    1. `supabase/migrations` に SQL を記述。
+    2. `supabase db push` でスキーマ更新。
+    3. `supabase gen types typescript` で TS 型定義を更新。
+
+### 6.3 開発ワークフロー
+
+インターフェースに変更を加える際は、以下の「生成コマンド」を叩くことでプロジェクト全体の整合性を保ちます。
+
+```bash
+# 1. Protobuf 更新 (gRPC)
+npx buf generate
+
+# 2. REST API更新 (Voice-Verifier連携)
+npx orval --config ./orval.config.js
+
+# 3. DB型定義更新
+supabase gen types typescript --local > src/types/database.ts
 ```
