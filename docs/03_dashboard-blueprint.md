@@ -108,7 +108,7 @@ CREATE TABLE excel_templates (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- セッション管理
+-- セッション・コンソール (旧 セッション管理)
 CREATE TABLE sessions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,

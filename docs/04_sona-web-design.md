@@ -32,7 +32,7 @@ graph LR
 3. **エクセルテンプレート管理 (Excel Templates)**:
     - テンプレートファイルのアップロード。
     - セルマッピングの設定（GUIスプレッドシート）。
-4. **セッション管理 (Sessions)**:
+4. **セッション・コンソール (Session Console)**:
     - 会議の予約・開始、テンプレートおよび参加者の紐付け。
     - セッション ID の発行と QR コード表示（SonaCore 連携用）。
 5. **会議ログ・シミュレーター (Logs & Simulator)**:
@@ -79,7 +79,7 @@ graph LR
 | `mapping_json` | JSONB | セル座標、書式、挿入ロジックの定義 |
 | `created_at` | TIMESTAMPTZ | 作成日時 |
 
-#### `sessions` (セッション管理)
+#### `sessions` (セッション・コンソール用)
 | カラム名 | 型 | 説明 |
 | :--- | :--- | :--- |
 | `id` | UUID | PK |
