@@ -5,11 +5,12 @@
 
 ## 📦 Sona-Suite Repositories
 
-| Component | Repository Link | Tech Stack |
-| :--- | :--- | :--- |
-| **Desktop App** | [SonaCore-Client](#) | Electron, React, gRPC |
-| **Backend API** | [Voice-Verifier](#) | Python, Deepgram (Nova-2), gRPC |
-| **Dashboard** | [Sona-Web](#) | Next.js, Supabase |
+| Component | Repository Link | Tech Stack | Local Path (AI Context) |
+| :--- | :--- | :--- | :--- |
+| **Desktop App** | [SonaCore-Client](#) | Electron, React, gRPC | `/home/takumi/Application/SonaCore` |
+| **Backend API** | [Voice-Verifier](#) | Python, Deepgram (Nova-2), gRPC | `/home/takumi/Application/voice-verifier` |
+| **Dashboard** | [Sona-Web](#) | Next.js, Supabase | `/home/takumi/Application/Sona-Web` |
+| **Protobuf** | [Sona-Protobuf](#) | gRPC Definitions | `/home/takumi/Application/Sona-Protobuf` |
 
 ## 📐 Architecture Overview
 > **Concept**: Turning voice into gold.
