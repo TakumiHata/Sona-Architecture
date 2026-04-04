@@ -17,5 +17,8 @@
   ],
   "scripts": {
     "build": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "sona-design-tokens": "github:TakumiHata/Sona-Docs"
   }
 }

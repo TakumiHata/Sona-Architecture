@@ -1,7 +1,7 @@
 # ADR 001: 音声認識エンジンにDeepgramを採用する理由
 
 ## Status
-Accepted
+Superseded by [ADR 002](./002-agenda-batch-transcription.md)
 
 ## Context
 個人開発において、高精度な日本語音声認識とリアルタイム性が必要。
