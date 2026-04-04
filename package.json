@@ -1,0 +1,21 @@
+{
+  "name": "sona-design-tokens",
+  "version": "1.0.0",
+  "description": "Sona プロジェクト共通のデザイントークン",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./tailwind-preset": "./tailwind-preset.js",
+    "./css": "./css-variables.css",
+    "./tokens": "./tokens/colors.json"
+  },
+  "files": [
+    "index.js",
+    "tailwind-preset.js",
+    "css-variables.css",
+    "tokens/"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js"
+  }
+}

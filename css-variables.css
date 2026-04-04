@@ -1,0 +1,28 @@
+/* Auto-generated from tokens/colors.json — do not edit manually */
+:root {
+  --sona-brand-base: #1A1A2E;
+  --sona-brand-accent: #38E870;
+  --sona-brand-text: #E8E8E8;
+  --sona-surface-primary: #1A1A2E;
+  --sona-surface-secondary: #16162A;
+  --sona-surface-tertiary: #12122A;
+  --sona-surface-elevated: #222244;
+  --sona-surface-overlay: rgba(255, 255, 255, 0.03);
+  --sona-text-primary: #E8E8E8;
+  --sona-text-heading: #F0F0F0;
+  --sona-text-secondary: #A0A0A0;
+  --sona-text-muted: #666680;
+  --sona-border-default: rgba(255, 255, 255, 0.1);
+  --sona-border-subtle: rgba(255, 255, 255, 0.06);
+  --sona-accent: #38E870;
+  --sona-accent-hover: #2FCC5B;
+  --sona-accent-glow: #5FFF90;
+  --sona-accent-subtle: rgba(56, 232, 112, 0.05);
+  --sona-status-error: #FF6B6B;
+  --sona-status-error-bg: rgba(255, 107, 107, 0.1);
+  --sona-status-warning: #E8A838;
+  --sona-status-warning-bg: rgba(232, 168, 56, 0.05);
+  --sona-status-recording: #EF4444;
+  --sona-status-info: #6C9EFF;
+  --sona-status-info-bg: rgba(108, 158, 255, 0.05);
+}
