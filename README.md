@@ -53,6 +53,8 @@ Sona-Docs/
 │   ├── system-overview.md         システム構成・データフロー
 │   ├── batch-transcription.md     議題単位バッチ文字起こし設計
 │   ├── excel-mapping.md           Excel Hybrid Markdown 方式
+│   ├── excel-output-rules.md      Excel 出力フィールド対応 / シート構成 / 画像配置
+│   ├── database.md                Supabase テーブル定義 / RLS / 参照関係
 │   └── auth-and-access.md         認証・アクセス制御
 │
 └── decisions/                  ← ADR (Architecture Decision Records)
