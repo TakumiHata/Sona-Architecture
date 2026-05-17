@@ -8,12 +8,6 @@
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "postCreateCommand": "gh auth setup-git || true",
-  "remoteUser": "vscode",
-  "mounts": [
-    {
-      "source": "gh-config",
-      "target": "/home/vscode/.config/gh",
-      "type": "volume"
-    }
-  ]
+  "remoteUser": "node",
+  "mounts": ["source=gh-config,target=/home/node/.config/gh,type=volume"]
 }
